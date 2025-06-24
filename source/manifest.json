@@ -1,0 +1,22 @@
+{
+    "name": "Wordle Analytics",
+    "description": "View a comprehensive analysis of your Wordle games and compare to others in the world!",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "extension.html",
+        "default_icon": ""
+    },
+    "content_scripts": [
+        {
+        "matches": ["https://www.nytimes.com/games/wordle/index.html"],
+        "js": ["content.js"]
+        }
+    ],
+    "permissions": [
+        "storage"
+    ],
+    "host_permissions": [
+        
+    ]
+}
