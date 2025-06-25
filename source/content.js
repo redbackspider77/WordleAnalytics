@@ -19,3 +19,27 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
+
+
+// Select the node that will be observed for mutations
+const targetNode = document.getElementById("ToastContainer-module_gameToaster__HPkaC");
+
+// Options for the observer (which mutations to observe)
+const config = { attributes: false, childList: true, subtree: false };
+
+// Callback function to execute when mutations are observed
+const callback = (mutationList, observer) => {
+  for (const mutation of mutationList) {
+    chrome.runtime.sendMessage({ type: "openSidePanel", url });
+  }
+};
+
+// Create an observer instance linked to the callback function
+const observer = new MutationObserver(callback);
+
+// Start observing the target node for configured mutations
+observer.observe(targetNode, config);
+
+// Later, you can stop observing
+observer.disconnect();
