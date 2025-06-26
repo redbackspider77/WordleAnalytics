@@ -4,7 +4,6 @@
     "version": "1.0.0",
     "manifest_version": 3,
     "action": {
-        "default_popup": "extension.html",
         "default_title": "Wordle Analytics"
     },
     "content_scripts": [
@@ -15,7 +14,9 @@
     ],
     "permissions": [
         "storage",
-        "sidePanel"
+        "sidePanel",
+        "tabs",
+        "scripting"
     ],
     "host_permissions": [
         
@@ -26,5 +27,11 @@
     "side_panel": {
         "default_path": "panel.html",
         "default_title": "Wordle Analytics"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["panel.html", "panel.css"],
+            "matches": ["<all_urls>"]
+        }
+    ]
 }
