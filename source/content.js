@@ -90,6 +90,8 @@ if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.htm
         if (waiting) return;
         const finished = document.querySelector('.Header-module_statsHeading__NlnC1');
         if (finished) {
+            // hard mode retrieval logic
+
             const rows = document.querySelectorAll('.Row-module_row__pwpBq');
             for (let i = 5; i > -2; i--) {
                 let row = rows[i];

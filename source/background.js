@@ -1,4 +1,4 @@
-const firebaseConfig = {
+/*const firebaseConfig = {
   apiKey: "AIzaSyCnNUSxeI3V8m8mH-ZAZuW_N_EHipEy4NE",
   authDomain: "wordleanalytics-94a4b.firebaseapp.com",
   projectId: "wordleanalytics-94a4b",
@@ -13,7 +13,7 @@ import { getFirestore, doc, getDoc, setDoc } from "./firebase/firebase-firestore
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
+*/
 
 async function saveNYTAverage(day, NYTAverage) {
     chrome.storage.local.get(['NYTAverages'], (result) => {
