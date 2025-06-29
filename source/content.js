@@ -80,7 +80,7 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 });
 
-currentTab = window.location.toString();
+const currentTab = window.location.toString();
 
 if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.html") {
     console.log("Monitoring for game finish...");

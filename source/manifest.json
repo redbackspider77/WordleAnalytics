@@ -9,7 +9,7 @@
     "content_scripts": [
         {
         "matches": ["<all_urls>"],
-        "js": ["content.js"]
+        "js": ["content.js", "firebase/firebase-app.js", "firebase/firebase-firestore.js"]
         }
     ],
     "permissions": [
@@ -18,10 +18,12 @@
         "scripting"
     ],
     "host_permissions": [
-        "https://www.nytimes.com/interactive/2022/upshot/wordle-bot.html"
+        "https://www.nytimes.com/interactive/2022/upshot/wordle-bot.html",
+        "https://wordleanalytics-94a4b.firebaseio.com/"
     ],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "background.js",
+        "type": "module"
     },
     "web_accessible_resources": [
         {

@@ -1,3 +1,26 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyCnNUSxeI3V8m8mH-ZAZuW_N_EHipEy4NE",
+  authDomain: "wordleanalytics-94a4b.firebaseapp.com",
+  projectId: "wordleanalytics-94a4b",
+  storageBucket: "wordleanalytics-94a4b.firebasestorage.app",
+  messagingSenderId: "34017571752",
+  appId: "1:34017571752:web:a9f5874201d5e1fccda39d",
+  measurementId: "G-7RSS026EKQ"
+};
+
+import { initializeApp } from "./firebase/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "./firebase/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+async function saveNYTAverage(day, NYTAverage) {
+    chrome.storage.local.get(['NYTAverages'], (result) => {
+        result[day] = NYTAverage;
+    });
+}
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.action.onClicked.addListener((tab) => {
         chrome.tabs.sendMessage(tab.id, { type: 'togglePanel' });
@@ -20,7 +43,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 }, resolve);
             });
 
-            /* attempt to trigger wordle bot loading to scrape successfully with minimal user contact, but it seems to be unnecessary and too hardcoded to continue working on
+            /* attempt to trigger wordle bot loading to scrape successfully with minimal user contact, but it seemed to be unnecessary and too hardcoded to continue working on
             const tabLoaded = new Promise((resolve) => {
                 const listener = (tabId, changeInfo) => {
                     if (tabId === tab.id && changeInfo.status === 'complete') {
@@ -46,6 +69,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     chrome.tabs.remove(tab.id);
                     sendResponse({ average: response.average });
                     chrome.runtime.onMessage.removeListener(listener);
+                    
                 }
             };
 
