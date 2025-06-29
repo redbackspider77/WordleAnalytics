@@ -61,9 +61,9 @@ async function openPanel() {
 async function updatePanel() {
     const iframe = document.getElementById("wordle-panel");
 
-    iframe.addEventListener('load', function() {
+    iframe.onload = () => {
         iframe.contentWindow.postMessage({ type: "loadPanel" }, "*");
-    });
+    }
 }
 
 
@@ -91,7 +91,7 @@ if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.htm
         const finished = document.querySelector('.Header-module_statsHeading__NlnC1');
         if (finished) {
             const rows = document.querySelectorAll('.Row-module_row__pwpBq');
-            for (let i = 5; i < rows.length; i--) {
+            for (let i = 5; i > -2; i--) {
                 let row = rows[i];
 
                 if (row.textContent) {
@@ -99,6 +99,11 @@ if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.htm
                     const guessCount = i + 1;
                     saveUserGuess(day, guessCount);
                     break;
+                }
+
+                if (i === -1) {
+                    const day = new Date().toISOString().slice(0, 10);
+                    saveUserGuess(day, 0);
                 }
             }
 

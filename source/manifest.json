@@ -14,10 +14,11 @@
     ],
     "permissions": [
         "storage",
-        "tabs"
+        "tabs",
+        "scripting"
     ],
     "host_permissions": [
-        
+        "https://www.nytimes.com/interactive/2022/upshot/wordle-bot.html"
     ],
     "background": {
         "service_worker": "background.js"

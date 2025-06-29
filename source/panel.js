@@ -20,9 +20,26 @@ window.addEventListener("message", (event) => {
 
             if (todayStats) {
                 const todayGuessesElement = document.getElementById("todayGuess");
-                todayGuessesElement.textContent = `You completed Wordle today on your ${ordinal(todayStats)} guess!`;
+                if (todayStats === 0) {
+                    todayGuessesElement.textContent = "Wordle was a tough one today, but there is always tomorrow! :)";
+                } else {
+                    todayGuessesElement.textContent = `You completed Wordle today on your ${ordinal(todayStats)} guess!`;
+                }
+
                 console.log("Panel updated with today's guesses:", todayStats);
             }
+        });
+
+        chrome.runtime.sendMessage({ type: "getNYTAverage" }, (response) => {
+            const averageElement = document.getElementById("NYTAverage");
+
+            if (response.average && response.average !== "-1") {
+                averageElement.textContent = response.average;
+            } else {
+                averageElement.textContent = "Not available yet...";
+            }
+
+            console.log("Panel updated with NYT Average:", response.average);
         });
     }
 });
