@@ -1,0 +1,17 @@
+{
+  "name": "wordleanalytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^11.10.0",
+    "fs-extra": "^11.3.0",
+    "vite": "^7.0.0"
+  }
+}

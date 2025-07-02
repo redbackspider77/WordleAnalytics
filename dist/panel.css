@@ -1,0 +1,75 @@
+#analytics-panel, #analytics-panel * {
+    all: unset;
+    box-sizing: border-box;
+}
+
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 30vw;
+    background: #fff;
+    color: #000;
+    border-left: 1px solid #ccc;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.side-panel.open {
+    transform: translateX(0);
+}
+
+.panel-header {
+    padding: 0.5em;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+}
+
+#close-panel {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0.25em 0.5em;
+}
+
+.panel-content {
+    padding: 1em;
+}
+
+h1 {
+    font-family: "Felipa", serif;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+#hardMode {
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {  
+  body {  
+     background: #f8f9fa;    
+     color: black;  
+  }
+}
+
+@media (prefers-color-scheme: dark) {  
+  body {  
+     background: #303134;    
+     color: white;
+  }
+  a {
+    color: #4f8cff;
+  }
+  button {
+    color: white;
+  }
+}
