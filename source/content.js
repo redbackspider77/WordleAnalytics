@@ -1,3 +1,19 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyCnNUSxeI3V8m8mH-ZAZuW_N_EHipEy4NE",
+  authDomain: "wordleanalytics-94a4b.firebaseapp.com",
+  projectId: "wordleanalytics-94a4b",
+  storageBucket: "wordleanalytics-94a4b.firebasestorage.app",
+  messagingSenderId: "34017571752",
+  appId: "1:34017571752:web:a9f5874201d5e1fccda39d",
+  measurementId: "G-7RSS026EKQ"
+};
+
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 async function createPanel() {
     return new Promise((resolve) => {
         const iframe = document.createElement('iframe');
@@ -69,6 +85,8 @@ async function updatePanel() {
 
 chrome.runtime.onMessage.addListener((message) => {
     if (message.type === 'togglePanel') {
+        console.log('Recieved messaage to toggle panel.');
+
         const panel = document.getElementById('wordle-panel');
         if (!panel) {
             createPanel();
@@ -80,6 +98,19 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 });
 
+async function saveUserGuess(day, guessCount, isHardMode) {
+    console.log(`Game finished on ${day} in ${guessCount} guesses - ${isHardMode ? "hard" : "normal"} mode.`);
+
+    const result = await chrome.storage.local.get("wordleStats");
+    const data = result.wordleStats || {};
+    data[day] = {
+        guess: guessCount,
+        mode: isHardMode ? "hard" : "normal"
+    };
+
+    await chrome.storage.local.set({ wordleStats: data });
+}
+
 const currentTab = window.location.toString();
 
 if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.html") {
@@ -90,7 +121,8 @@ if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.htm
         if (waiting) return;
         const finished = document.querySelector('.Header-module_statsHeading__NlnC1');
         if (finished) {
-            // hard mode retrieval logic
+            const modeButton = document.querySelector('[aria-label*="Hard Mode"]');
+            const isHardMode = modeButton?.getAttribute('aria-checked') === 'true';
 
             const rows = document.querySelectorAll('.Row-module_row__pwpBq');
             for (let i = 5; i > -2; i--) {
@@ -99,13 +131,13 @@ if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.htm
                 if (row.textContent) {
                     const day = new Date().toISOString().slice(0, 10);
                     const guessCount = i + 1;
-                    saveUserGuess(day, guessCount);
+                    saveUserGuess(day, guessCount, isHardMode);
                     break;
                 }
 
                 if (i === -1) {
                     const day = new Date().toISOString().slice(0, 10);
-                    saveUserGuess(day, 0);
+                    saveUserGuess(day, 0, isHardMode);
                 }
             }
 
@@ -121,14 +153,4 @@ if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.htm
             clearInterval(id);
         }
     }, 100);
-}
-
-async function saveUserGuess(day, guessCount) {
-    console.log(`Game finished on ${day} in ${guessCount} guesses.`);
-
-    const result = await chrome.storage.local.get("wordleStats");
-    const data = result.wordleStats || {};
-    data[day] = guessCount;
-
-    await chrome.storage.local.set({ wordleStats: data });
 }

@@ -50,6 +50,10 @@ h1 {
     text-align: center;
 }
 
+#hardMode {
+  text-align: center;
+}
+
 @media (prefers-color-scheme: light) {  
   body {  
      background: #f8f9fa;    

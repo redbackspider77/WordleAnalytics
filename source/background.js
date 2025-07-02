@@ -1,30 +1,14 @@
-/*const firebaseConfig = {
-  apiKey: "AIzaSyCnNUSxeI3V8m8mH-ZAZuW_N_EHipEy4NE",
-  authDomain: "wordleanalytics-94a4b.firebaseapp.com",
-  projectId: "wordleanalytics-94a4b",
-  storageBucket: "wordleanalytics-94a4b.firebasestorage.app",
-  messagingSenderId: "34017571752",
-  appId: "1:34017571752:web:a9f5874201d5e1fccda39d",
-  measurementId: "G-7RSS026EKQ"
-};
-
-import { initializeApp } from "./firebase/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "./firebase/firebase-firestore.js";
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-*/
-
 async function saveNYTAverage(day, NYTAverage) {
     chrome.storage.local.get(['NYTAverages'], (result) => {
-        result[day] = NYTAverage;
+        const NYTAverages = result.NYTAverages || {};
+        NYTAverages[day] = { average: NYTAverage };
+        chrome.storage.local.set({ NYTAverages });
+        console.log("Saved NYTAverage:", {day: { average: NYTAverage }});
     });
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.action.onClicked.addListener((tab) => {
-        chrome.tabs.sendMessage(tab.id, { type: 'togglePanel' });
-    });
+chrome.action.onClicked.addListener((tab) => {
+    chrome.tabs.sendMessage(tab.id, { type: 'togglePanel' });
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -68,6 +52,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     chrome.tabs.update(originalTab.id, { active: true });
                     chrome.tabs.remove(tab.id);
                     sendResponse({ average: response.average });
+                    saveNYTAverage((new Date().toISOString().slice(0, 10)), response.average);
                     chrome.runtime.onMessage.removeListener(listener);
                     
                 }
@@ -85,6 +70,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 chrome.tabs.update(originalTab.id, { active: true });
                 chrome.tabs.remove(tab.id);
                 sendResponse({ average: null, error: error.message });
+                saveNYTAverage((new Date().toISOString().slice(0, 10)), response.average);
                 chrome.runtime.onMessage.removeListener(listener);
             }
         })();
