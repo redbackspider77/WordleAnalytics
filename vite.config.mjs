@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import fse from 'fs-extra'; // file system extra
+import fse from 'fs-extra';
 
 function copyAllSource() {
   return {
