@@ -14,41 +14,6 @@ import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const today = new Date().toISOString().slice(0, 10);
-
-(async () => {
-    const NYTAverage = (await getAverage(today, false)) || "unavailable";
-    const NYTHardAverage = (await getAverage(today, false)) || "unavailable"; 
-})();
-
-async function getAverage(date, isHardMode) {
-  const ref = doc(db, "games", date);
-  const snap = await getDoc(ref);
-
-  if (snap.exists()) {
-    const data = snap.data();
-
-    if (isHardMode) {
-        return data.NYTHardAverage;
-    } else {
-        return data.NYTAverage;
-    }
-  } else {
-    console.log("No data for this date");
-    return null;
-  }
-}
-
-async function setAverage(date, average, isHardMode) {
-    const ref = doc(db, "games", date);
-
-    if (isHardMode) {
-        await setDoc(ref, { NYTHardAverage: average });
-    } else {
-        await setDoc(ref, { NYTAverage: average });
-    }
-}
-
 async function createPanel() {
     return new Promise((resolve) => {
         const iframe = document.createElement('iframe');
@@ -113,13 +78,7 @@ async function updatePanel() {
     const iframe = document.getElementById("wordle-panel");
 
     iframe.onload = () => {
-        const id = setTimeout(function() {
-            if (NYTAverage && NYTHardAverage) {  
-                clearInterval(id);
-            }
-        }, 200);
-
-        iframe.contentWindow.postMessage({ type: "loadPanel", average: NYTAverage, hardAverage: NYTHardAverage }, "*");
+        iframe.contentWindow.postMessage({ type: "loadPanel" }, "*");
     }
 }
 
