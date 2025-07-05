@@ -20,9 +20,7 @@ window.addEventListener("message", (event) => {
 
             if (todayStats) {
                 const hardModeElement = document.getElementById("hardMode");
-
-                const mode = todayStats.mode;
-                if (mode === "hard") {
+                if (todayStats.mode === "hard") {
                     hardModeElement.textContent = "Hard Mode";
                 }
 

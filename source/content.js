@@ -16,24 +16,10 @@ const db = getFirestore(app);
 
 const today = new Date().toISOString().slice(0, 10);
 
-chrome.storage.local.get(["NYTAverages"], async (result) => {
-    const cache = result.NYTAverages || {};
-
-    if (!cache[today]) {
-        const NYTAverage = await getAverage(today, false);
-        const NYTHardAverage = await getAverage(today, true);
-
-        cache[today] = {
-            average: NYTAverage ?? -1,
-            hardAverage: NYTHardAverage ?? -1
-        };
-
-        await chrome.storage.local.set({ NYTAverages: cache });
-        console.log("Fetched and cached NYT averages for today:", cache[today]);
-    } else {
-        console.log("Used cached NYT averages:", cache[today]);
-    }
-});
+(async () => {
+    const NYTAverage = (await getAverage(today, false)) || "unavailable";
+    const NYTHardAverage = (await getAverage(today, false)) || "unavailable"; 
+})();
 
 async function getAverage(date, isHardMode) {
   const ref = doc(db, "games", date);
@@ -112,7 +98,7 @@ async function closePanel() {
         console.log("Panel closed!");
     }
 }
- 
+
 async function openPanel() {
     const iframe = document.getElementById("wordle-panel");
     if (iframe) {
@@ -126,20 +112,17 @@ async function openPanel() {
 async function updatePanel() {
     const iframe = document.getElementById("wordle-panel");
 
-    iframe.onload = async () => {
-        const result = await chrome.storage.local.get("NYTAverages");
-        const data = result.NYTAverages?.[today] || {
-            average: "Unavailable",
-            hardAverage: "Unavailable"
-        };
+    iframe.onload = () => {
+        const id = setTimeout(function() {
+            if (NYTAverage && NYTHardAverage) {  
+                clearInterval(id);
+            }
+        }, 200);
 
-        iframe.contentWindow.postMessage({
-            type: "loadPanel",
-            average: data.average,
-            hardAverage: data.hardAverage
-        }, "*");
-    };
+        iframe.contentWindow.postMessage({ type: "loadPanel", average: NYTAverage, hardAverage: NYTHardAverage }, "*");
+    }
 }
+
 
 chrome.runtime.onMessage.addListener((message) => {
     if (message.type === 'togglePanel') {
@@ -196,7 +179,6 @@ if (currentTab && currentTab === "https://www.nytimes.com/games/wordle/index.htm
                 if (i === -1) {
                     const day = new Date().toISOString().slice(0, 10);
                     saveUserGuess(day, 0, isHardMode);
-                    break;
                 }
             }
 
