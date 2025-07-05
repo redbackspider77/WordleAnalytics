@@ -66,11 +66,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     files: ['scrapeNYTAverage.js']
                 });
             } catch (error) {
-                clearTimeout(timeoutId);
                 chrome.tabs.update(originalTab.id, { active: true });
                 chrome.tabs.remove(tab.id);
                 sendResponse({ average: null, error: error.message });
-                saveNYTAverage((new Date().toISOString().slice(0, 10)), response.average);
                 chrome.runtime.onMessage.removeListener(listener);
             }
         })();
